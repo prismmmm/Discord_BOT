@@ -21,7 +21,7 @@ namespace Discord_BOT
         {
             await Task.Run(async () =>
              {
-                 await Task.Delay(30000);
+                 await Task.Delay(30000 * 2);
                  await message.DeleteAsync();
              });
         }
@@ -90,9 +90,9 @@ namespace Discord_BOT
             Bitmap map = await adp.CreateDropPoint();
             map.Save(filename);
             var map_message = await Context.Channel.SendFileAsync(filename);
-            await Delete(map_message);
             var message = Context.Message;
             await message.DeleteAsync();
+            await Delete(map_message);
         }
 
         [Command("help", RunMode = RunMode.Async)]
