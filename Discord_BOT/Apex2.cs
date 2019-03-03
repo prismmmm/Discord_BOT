@@ -11,24 +11,36 @@ using Newtonsoft.Json;
 
 namespace Discord_BOT
 {
-    class Apex2
+    class ApexStats
     {
-        public async Task<Player2> Stats(string name)
+        public async Task<Player> Stats(string name)
         {
+            //ver 1.0 
             return await Task.Run(() =>
             {
+                IniFile ini = new IniFile("./Setting/Setting.ini");
+                string apiKey = ini["section", "api_key"];
+
                 var helper = new Helper();
 
                 string baseUrl = $"https://public-api.tracker.gg/apex/v1/standard/profile/5/{name}";
                 string url = $"{baseUrl}";
 
                 HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.Add("TRN-Api-Key", $"e751dadd-3eca-4e4b-b10a-05c6ce651a51");
-                string json = client.GetStringAsync(url).Result;
+                client.DefaultRequestHeaders.Add("TRN-Api-Key", apiKey);
+                string json;
+                try
+                {
+                    json = client.GetStringAsync(url).Result;
+                }
+                catch
+                {
+                    return null;
+                }
 
                 Rootobject pDeserializeList = JsonConvert.DeserializeObject<Rootobject>(json);
 
-                var player = new Player2();
+                var player = new Player();
                 var _legends = new Legends[0];
 
 
@@ -60,18 +72,19 @@ namespace Discord_BOT
 
                 player.legends = _legends;
 
-
-                Console.WriteLine($"Player Name : {player.PlayerName}");
-                Console.WriteLine($"PlatForm : {player.Platform}");
-                Console.WriteLine($"Level : {player.PlayerLevel}");
-                foreach (var p in player.legends)
-                {
-                    foreach (KeyValuePair<string, string> pair in p.data)
-                    {
-                        Console.WriteLine($"{pair.Key} : {pair.Value}");
-                    }
-                    Console.WriteLine($"Kill rank : {p.KillRank}\r\n");
-                }
+                #region Test
+                //Console.WriteLine($"Player Name : {player.PlayerName}");
+                //Console.WriteLine($"PlatForm : {player.Platform}");
+                //Console.WriteLine($"Level : {player.PlayerLevel}");
+                //foreach (var p in player.legends)
+                //{
+                //    foreach (KeyValuePair<string, string> pair in p.data)
+                //    {
+                //        Console.WriteLine($"{pair.Key} : {pair.Value}");
+                //    }
+                //    Console.WriteLine($"Kill rank : {p.KillRank}\r\n");
+                //}
+                #endregion
 
                 return player;
             });
@@ -108,7 +121,7 @@ namespace Discord_BOT
     }
 
 
-    public class Player2
+    public class Player
     {
         public string PlayerName { get; set; }
         public string Platform { get; set; }

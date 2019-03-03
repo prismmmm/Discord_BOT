@@ -12,7 +12,8 @@ using System.Threading.Tasks;
 namespace Discord_BOT
 {
     class Program
-    {
+    {   //ver 1.0 2019/03/03
+
         public static DiscordSocketClient client;
         public static CommandService commands;
         public static IServiceProvider services;
@@ -21,8 +22,7 @@ namespace Discord_BOT
 
         public async Task MainAsync()
         {
-            
-
+            var version = "1.0";
             client = new DiscordSocketClient();
             commands = new CommandService();
             services = new ServiceCollection().BuildServiceProvider();
@@ -31,9 +31,11 @@ namespace Discord_BOT
 
             client.Log += Log;
 
-            var token = "NTUwODM4NTE4OTMxMzkwNDgy.D1oQSA.8abVYdlRjmc4pF6p2D38hPZsrRA";
+            IniFile ini = new IniFile("./Setting/Setting.ini");
+            var token = ini["section", "bot_token"];
+
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
-            await client.SetGameAsync(":help");
+            await client.SetGameAsync($":help | ver {version}");
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
             await Task.Delay(-1);
@@ -47,7 +49,7 @@ namespace Discord_BOT
 
             if (message == null) { return; }
 
-            //if (message.Author.IsBot) { return; }
+            if (message.Author.IsBot) { return; }
 
             int argPos = 0;
 

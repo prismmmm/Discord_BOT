@@ -77,10 +77,5 @@ namespace Discord_BOT
             return result;
         }
 
-        public string Padding(int n,string str)
-        {
-            str += "                                              ";
-            return str.Substring(0,n) + "\n";
-        }
     }
 }
